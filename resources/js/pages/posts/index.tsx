@@ -65,6 +65,13 @@ export default function Dashboard({ posts }: { posts: PostsType }) {
         handlerSearch(query);
     }
 
+    function deletePost(id: number) {
+        if (confirm('Are you sure you want to delete this post?')) {
+            router.delete(`/posts/${id}`);
+            toast.success('Post deleted successfully');
+        }
+    }
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Posts" />
@@ -120,7 +127,7 @@ export default function Dashboard({ posts }: { posts: PostsType }) {
                                                         Edit
                                                     </Link>
                                                 </Button>
-                                                <Button size={'sm'} variant={'destructive'}>
+                                                <Button onClick={() => deletePost(post.id)} size={'sm'} variant={'destructive'}>
                                                     Delete
                                                 </Button>
                                             </TableCell>
