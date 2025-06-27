@@ -22,13 +22,13 @@ export default function Dashboard() {
         title: string;
         category: string;
         status: string;
-        content: string;
+        contents: string;
         image: File | null;
     }>({
         title: '',
         category: '',
         status: '',
-        content: '',
+        contents: '',
         image: null,
     });
 
@@ -97,9 +97,15 @@ export default function Dashboard() {
                                 </div>
 
                                 <div className={'mt-4'}>
-                                    <Label htmlFor={'content'}>Content</Label>
-                                    <Textarea rows={6} id={'content'} aria-invalid={!!errors.content} placeholder={"Type Content here..."} value={data.content} onChange={e => setData('content', e.target.value)}/>
-                                    <InputError message={errors.content} />
+                                    <Label htmlFor={'contents'}>Content</Label>
+                                    <Textarea
+                                        rows={6}
+                                        id='contents'
+                                        placeholder={"Type Content here..."}
+                                        value={data.contents}
+                                        onChange={e => setData('contents', e.target.value)}
+                                        aria-invalid={errors.contents !== undefined} />
+                                    <InputError message={errors.contents} />
                                 </div>
                                 <div className={'mt-4'}>
                                     <Label htmlFor={"image"}>Image</Label>

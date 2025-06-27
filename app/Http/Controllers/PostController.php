@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -12,9 +13,16 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('posts/index');
+        $query = Auth::user()->posts()->latest();
+        if($request->has('search') && $request->search !== null) {
+            $query->whereAny(['title', 'content'], 'like', '%' . $request->search . '%');
+        }
+        $posts = $query->paginate(10)->toArray();
+        return Inertia::render('posts/index', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -32,7 +40,7 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
+            'contents' => ['required', 'string'],
             'status' => ['required', 'string'],
             'category' => ['required', 'string'],
             'image' => ['required', 'image', 'max:2048'],
@@ -45,7 +53,7 @@ class PostController extends Controller
             'user_id' => auth()->user()->id,
             'title' => $request->title,
             'slug' => Str::slug($request->title),
-            'content' => $request->content,
+            'content' => $request->contents,
             'status' => $request->status,
             'category' => $request->category,
             'image' => $filePath,
